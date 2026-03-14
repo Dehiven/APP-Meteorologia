@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { useWeatherStore, type Language } from '../store/weatherStore';
-import { FiGlobe, FiChevronDown } from 'react-icons/fi';
+import { FiGlobe } from 'react-icons/fi';
 
 const languages: { code: Language; label: string; flag: string }[] = [
   { code: 'en', label: 'English', flag: '🇺🇸' },
@@ -10,37 +11,46 @@ const languages: { code: Language; label: string; flag: string }[] = [
 
 export function LanguageSelector() {
   const { language, setLanguage } = useWeatherStore();
+  const [isOpen, setIsOpen] = useState(false);
   const currentLang = languages.find(l => l.code === language);
 
   return (
-    <div className="relative group">
-      <button className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white/10 border border-white/10 hover:bg-white/20 hover:border-white/20 transition-all duration-300">
-        <FiGlobe className="text-white/70" size={16} />
-        <span className="text-base">{currentLang?.flag}</span>
-        <FiChevronDown className="text-white/50" size={14} />
+    <div className="relative">
+      <button 
+        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <FiGlobe className="text-white/60" size={14} />
+        <span className="text-sm">{currentLang?.flag}</span>
       </button>
       
-      <div className="absolute top-full right-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
-        <div className="glass-darker rounded-2xl p-1.5 shadow-2xl min-w-[160px]">
-          {languages.map((lang) => (
-            <button
-              key={lang.code}
-              onClick={() => setLanguage(lang.code)}
-              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-left transition-all duration-200 ${
-                language === lang.code
-                  ? 'bg-amber-500/20 text-amber-400'
-                  : 'text-white/70 hover:bg-white/10 hover:text-white'
-              }`}
-            >
-              <span className="text-lg">{lang.flag}</span>
-              <span className="text-sm font-medium">{lang.label}</span>
-              {language === lang.code && (
-                <span className="ml-auto w-2 h-2 rounded-full bg-amber-400"></span>
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
+      {isOpen && (
+        <>
+          <div 
+            className="fixed inset-0 z-40" 
+            onClick={() => setIsOpen(false)}
+          />
+          <div className="absolute right-0 mt-1 bg-slate-800/95 backdrop-blur-lg border border-white/10 rounded-lg shadow-xl z-50 min-w-[140px] overflow-hidden">
+            {languages.map((lang) => (
+              <button
+                key={lang.code}
+                onClick={() => {
+                  setLanguage(lang.code);
+                  setIsOpen(false);
+                }}
+                className={`w-full flex items-center gap-2 px-3 py-2 text-left text-sm transition-colors ${
+                  language === lang.code
+                    ? 'bg-amber-500/20 text-amber-400'
+                    : 'text-white/70 hover:bg-white/10 hover:text-white'
+                }`}
+              >
+                <span>{lang.flag}</span>
+                <span>{lang.label}</span>
+              </button>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

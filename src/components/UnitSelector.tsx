@@ -4,23 +4,23 @@ export function UnitSelector() {
   const { unitSystem, setUnitSystem } = useWeatherStore();
 
   return (
-    <div className="flex items-center gap-1 p-1.5 bg-white/10 rounded-xl border border-white/10">
+    <div className="flex items-center bg-white/5 rounded-lg border border-white/10 overflow-hidden">
       <button
         onClick={() => setUnitSystem('metric')}
-        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 ${
+        className={`px-3 py-1.5 text-xs font-semibold transition-colors ${
           unitSystem === 'metric'
-            ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-lg shadow-amber-500/30'
-            : 'text-white/60 hover:text-white hover:bg-white/10'
+            ? 'bg-amber-500 text-white'
+            : 'text-white/50 hover:text-white hover:bg-white/5'
         }`}
       >
         °C
       </button>
       <button
         onClick={() => setUnitSystem('imperial')}
-        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 ${
+        className={`px-3 py-1.5 text-xs font-semibold transition-colors ${
           unitSystem === 'imperial'
-            ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-lg shadow-amber-500/30'
-            : 'text-white/60 hover:text-white hover:bg-white/10'
+            ? 'bg-amber-500 text-white'
+            : 'text-white/50 hover:text-white hover:bg-white/5'
         }`}
       >
         °F

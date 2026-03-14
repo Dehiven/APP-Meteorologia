@@ -54,83 +54,65 @@ export function CurrentWeather() {
   const uvLevel = uvIndex === 1 ? t.low : uvIndex === 2 ? t.moderate : t.high;
 
   return (
-    <div className={`transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 p-4 sm:p-6 md:p-10 text-white shadow-2xl">
-        <div className="absolute top-0 right-0 w-40 h-40 sm:w-64 sm:h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-32 h-32 sm:w-48 sm:h-48 bg-amber-400/20 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
+    <div className={`transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+      <div className="bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl p-4 sm:p-6 text-white overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
         
-        <div className="relative z-10">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 lg:gap-8">
-            <div className="flex flex-col items-center text-center">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="px-3 py-1 bg-white/20 rounded-full text-xs sm:text-sm font-medium backdrop-blur-sm">
-                  {location.admin1 || location.country}
-                </span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-1">
-                {location.name}
-              </h2>
-              <p className="text-blue-200 text-sm sm:text-lg mb-4">
-                {getWeatherDescription(current.weatherCode)}
-              </p>
-              <div className="flex items-center gap-3 sm:gap-6">
-                <WeatherIcon 
-                  code={current.weatherCode} 
-                  className="text-5xl sm:text-7xl md:text-9xl drop-shadow-2xl animate-pulse-slow" 
-                />
-                <div>
-                  <div className="text-5xl sm:text-7xl md:text-8xl font-bold leading-none">
-                    {Math.round(current.temperature)}°
-                  </div>
-                  <div className="text-blue-200 text-xs sm:text-sm mt-1 sm:mt-2">
-                    {t.feelsLike} {Math.round(current.apparentTemperature)}°
-                  </div>
-                </div>
-              </div>
-            </div>
+        {/* Location */}
+        <div className="text-center mb-4">
+          <span className="inline-block px-2 py-1 bg-white/20 rounded-full text-xs">
+            {location.admin1 || location.country}
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-bold mt-2">{location.name}</h2>
+          <p className="text-blue-200 text-sm">{getWeatherDescription(current.weatherCode)}</p>
+        </div>
 
-            <div className="grid grid-cols-2 gap-3 sm:gap-4">
-              <div className="glass rounded-xl sm:rounded-2xl p-3 sm:p-5 hover:bg-white/20 transition-all duration-300">
-                <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-2">
-                  <WiHumidity className="text-blue-200" size={18} />
-                  <div className="text-blue-200 text-xs sm:text-sm">{t.humidity}</div>
-                </div>
-                <div className="text-2xl sm:text-3xl font-bold">{current.relativeHumidity}%</div>
-                <div className="w-full bg-white/20 rounded-full h-1.5 mt-2">
-                  <div 
-                    className="bg-blue-300 h-1.5 rounded-full transition-all duration-1000" 
-                    style={{ width: `${current.relativeHumidity}%` }}
-                  ></div>
-                </div>
-              </div>
-              <div className="glass rounded-xl sm:rounded-2xl p-3 sm:p-5 hover:bg-white/20 transition-all duration-300">
-                <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-2">
-                  <WiStrongWind className="text-blue-200" size={18} />
-                  <div className="text-blue-200 text-xs sm:text-sm">{t.wind}</div>
-                </div>
-                <div className="text-2xl sm:text-3xl font-bold">
-                  {Math.round(current.windSpeed)} <span className="text-sm font-normal">{unitSystem === 'metric' ? 'km/h' : 'mph'}</span>
-                </div>
-              </div>
-              <div className="glass rounded-xl sm:rounded-2xl p-3 sm:p-5 hover:bg-white/20 transition-all duration-300">
-                <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-2">
-                  <span className="text-blue-200">💧</span>
-                  <div className="text-blue-200 text-xs sm:text-sm">{t.precipitation}</div>
-                </div>
-                <div className="text-2xl sm:text-3xl font-bold">
-                  {current.precipitation} <span className="text-sm font-normal">{unitSystem === 'metric' ? 'mm' : 'in'}</span>
-                </div>
-              </div>
-              <div className="glass rounded-xl sm:rounded-2xl p-3 sm:p-5 hover:bg-white/20 transition-all duration-300">
-                <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-2">
-                  <WiDaySunny className="text-amber-300" size={18} />
-                  <div className="text-blue-200 text-xs sm:text-sm">{t.uvIndex}</div>
-                </div>
-                <div className="text-2xl sm:text-3xl font-bold">{uvIndex}</div>
-                <div className={`text-xs sm:text-sm ${uvIndex === 1 ? 'text-green-300' : uvIndex === 2 ? 'text-yellow-300' : 'text-red-300'}`}>
-                  {uvLevel}
-                </div>
-              </div>
+        {/* Main Temp */}
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <WeatherIcon code={current.weatherCode} className="text-6xl sm:text-8xl" />
+          <div>
+            <div className="text-5xl sm:text-7xl font-bold">{Math.round(current.temperature)}°</div>
+            <div className="text-blue-200 text-xs sm:text-sm">{t.feelsLike} {Math.round(current.apparentTemperature)}°</div>
+          </div>
+        </div>
+
+        {/* Metrics Grid */}
+        <div className="grid grid-cols-2 gap-2 sm:gap-3">
+          <div className="bg-white/10 rounded-xl p-3">
+            <div className="flex items-center gap-1.5 mb-1">
+              <WiHumidity className="text-blue-200" size={14} />
+              <span className="text-blue-200 text-xs">{t.humidity}</span>
+            </div>
+            <div className="text-xl font-bold">{current.relativeHumidity}%</div>
+            <div className="w-full bg-white/20 rounded-full h-1 mt-1">
+              <div className="bg-blue-300 h-1 rounded-full" style={{ width: `${current.relativeHumidity}%` }}></div>
+            </div>
+          </div>
+          
+          <div className="bg-white/10 rounded-xl p-3">
+            <div className="flex items-center gap-1.5 mb-1">
+              <WiStrongWind className="text-blue-200" size={14} />
+              <span className="text-blue-200 text-xs">{t.wind}</span>
+            </div>
+            <div className="text-xl font-bold">{Math.round(current.windSpeed)} <span className="text-sm font-normal">{unitSystem === 'metric' ? 'km/h' : 'mph'}</span></div>
+          </div>
+          
+          <div className="bg-white/10 rounded-xl p-3">
+            <div className="flex items-center gap-1.5 mb-1">
+              <span className="text-blue-200 text-xs">💧</span>
+              <span className="text-blue-200 text-xs">{t.precipitation}</span>
+            </div>
+            <div className="text-xl font-bold">{current.precipitation} <span className="text-sm font-normal">{unitSystem === 'metric' ? 'mm' : 'in'}</span></div>
+          </div>
+          
+          <div className="bg-white/10 rounded-xl p-3">
+            <div className="flex items-center gap-1.5 mb-1">
+              <WiDaySunny className="text-amber-300" size={14} />
+              <span className="text-blue-200 text-xs">{t.uvIndex}</span>
+            </div>
+            <div className="text-xl font-bold">{uvIndex}</div>
+            <div className={`text-xs ${uvIndex === 1 ? 'text-green-300' : uvIndex === 2 ? 'text-yellow-300' : 'text-red-300'}`}>
+              {uvLevel}
             </div>
           </div>
         </div>
