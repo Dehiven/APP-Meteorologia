@@ -4,23 +4,23 @@ export function UnitSelector() {
   const { unitSystem, setUnitSystem } = useWeatherStore();
 
   return (
-    <div className="flex items-center gap-1 bg-white/15 backdrop-blur-md rounded-xl sm:rounded-2xl p-1 border border-white/20">
+    <div className="flex items-center gap-1 p-1.5 bg-white/10 rounded-xl border border-white/10">
       <button
         onClick={() => setUnitSystem('metric')}
-        className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 ${
+        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 ${
           unitSystem === 'metric'
-            ? 'bg-white text-slate-800 shadow-lg'
-            : 'text-white/70 hover:text-white hover:bg-white/10'
+            ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-lg shadow-amber-500/30'
+            : 'text-white/60 hover:text-white hover:bg-white/10'
         }`}
       >
         °C
       </button>
       <button
         onClick={() => setUnitSystem('imperial')}
-        className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 ${
+        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 ${
           unitSystem === 'imperial'
-            ? 'bg-white text-slate-800 shadow-lg'
-            : 'text-white/70 hover:text-white hover:bg-white/10'
+            ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-lg shadow-amber-500/30'
+            : 'text-white/60 hover:text-white hover:bg-white/10'
         }`}
       >
         °F
