@@ -22,30 +22,32 @@ function App() {
     <div className="min-h-screen flex flex-col">
       {/* Header */}
       <header className="sticky top-0 z-50">
-        <div className="absolute inset-0 bg-slate-900/95 backdrop-blur-2xl border-b border-white/5"></div>
+        <div className="absolute inset-0 bg-slate-900/95 backdrop-blur-xl border-b border-white/10"></div>
         
-        <div className="relative">
+        <div className="relative px-4 py-3">
           {/* Main Header Row */}
-          <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center justify-between gap-3">
             {/* Logo */}
             <div className="flex items-center gap-2">
-              <div className="w-9 h-9 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center shadow-lg">
+              <div className="w-9 h-9 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center">
                 <WiDaySunny className="text-white text-lg" />
               </div>
               <h1 className="text-lg font-bold text-white">Weather</h1>
             </div>
 
-            {/* Mobile Controls */}
-            <div className="flex items-center gap-2 md:hidden">
+            {/* Desktop Search */}
+            <div className="hidden md:block flex-1 max-w-md mx-4">
+              <SearchBar />
+            </div>
+
+            {/* Desktop Controls */}
+            <div className="hidden md:flex items-center gap-2">
               <UnitSelector />
               <LanguageSelector />
             </div>
 
-            {/* Desktop Controls */}
-            <div className="hidden md:flex items-center gap-3">
-              <div className="w-80">
-                <SearchBar />
-              </div>
+            {/* Mobile Controls Row */}
+            <div className="flex md:hidden items-center gap-2">
               <UnitSelector />
               <LanguageSelector />
             </div>
@@ -64,7 +66,7 @@ function App() {
           </div>
 
           {/* Mobile Search Bar */}
-          <div className={`md:hidden px-4 pb-3 ${mobileMenuOpen ? 'block' : 'hidden'}`}>
+          <div className={`md:hidden mt-3 ${mobileMenuOpen ? 'block' : 'hidden'}`}>
             <SearchBar />
           </div>
         </div>

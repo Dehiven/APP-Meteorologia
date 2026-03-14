@@ -9,7 +9,6 @@ import {
   WiDayCloudy
 } from 'react-icons/wi';
 import { useWeatherStore } from '../store/weatherStore';
-import { formatDayName } from '../utils/weatherUtils';
 
 const getWeatherIconComponent = (code: number) => {
   if (code === 0) return WiDaySunny;
@@ -29,6 +28,23 @@ const getWeatherIconComponent = (code: number) => {
 const WeatherIcon = ({ code, className }: { code: number; className?: string }) => {
   const Icon = getWeatherIconComponent(code);
   return <Icon className={className} />;
+};
+
+const getDayName = (dateString: string, t: { today: string; tomorrow: string; weekdays: string[] }): string => {
+  const date = new Date(dateString);
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  if (date.toDateString() === today.toDateString()) {
+    return t.today;
+  }
+  if (date.toDateString() === tomorrow.toDateString()) {
+    return t.tomorrow;
+  }
+  
+  const dayIndex = date.getDay();
+  return t.weekdays[dayIndex] || '';
 };
 
 export function WeeklyForecast() {
@@ -68,7 +84,7 @@ export function WeeklyForecast() {
             }`}
           >
             <span className={`text-xs font-medium ${selectedDayIndex === index ? 'text-blue-600' : 'text-white/60'}`}>
-              {formatDayName(daily.time[index])}
+              {getDayName(daily.time[index], t)}
             </span>
             <WeatherIcon 
               code={daily.weatherCode[index]} 

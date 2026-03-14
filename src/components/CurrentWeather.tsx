@@ -11,7 +11,6 @@ import {
   WiHumidity
 } from 'react-icons/wi';
 import { useWeatherStore } from '../store/weatherStore';
-import { getWeatherDescription } from '../utils/weatherUtils';
 
 const getWeatherIconComponent = (code: number) => {
   if (code === 0) return WiDaySunny;
@@ -52,6 +51,7 @@ export function CurrentWeather() {
   const { current, location } = weatherData;
   const uvIndex = Math.floor(Math.random() * 3) + 1;
   const uvLevel = uvIndex === 1 ? t.low : uvIndex === 2 ? t.moderate : t.high;
+  const weatherDesc = t.weatherDescriptions[current.weatherCode] || 'Unknown';
 
   return (
     <div className={`transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
@@ -64,7 +64,7 @@ export function CurrentWeather() {
             {location.admin1 || location.country}
           </span>
           <h2 className="text-2xl sm:text-3xl font-bold mt-2">{location.name}</h2>
-          <p className="text-blue-200 text-sm">{getWeatherDescription(current.weatherCode)}</p>
+          <p className="text-blue-200 text-sm">{weatherDesc}</p>
         </div>
 
         {/* Main Temp */}

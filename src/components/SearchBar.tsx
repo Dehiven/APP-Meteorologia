@@ -49,11 +49,11 @@ export function SearchBar() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={t.searchPlaceholder}
-          className="w-full px-4 py-2.5 pl-10 text-sm text-white bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-amber-500/50 focus:bg-white/10 transition-all placeholder:text-white/40"
+          className="w-full px-4 py-2.5 pl-10 text-sm text-white bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:border-amber-500/50 focus:bg-white/15 transition-all placeholder:text-white/50"
           minLength={2}
           maxLength={80}
         />
-        <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={16} />
+        <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50" size={16} />
       </div>
 
       {showResults && searchResults.length > 0 && (
