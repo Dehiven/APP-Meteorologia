@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { WeatherData, UnitSystem, GeocodingResult } from '../types';
-import { weatherApi } from '../services/api';
+import { weatherApi, geocodingApi } from '../services/api';
 
 export type Language = 'en' | 'es' | 'fr' | 'de';
 
@@ -158,7 +158,7 @@ export const useWeatherStore = create<WeatherState>((set, get) => ({
       const { location } = weatherData;
       try {
         set({ isLoading: true, error: null });
-        const response = await weatherApi.getWeather(
+        const weatherData = await weatherApi.getWeather(
           location.name === 'New York' ? 40.7128 : parseFloat(String(location.admin1)) || 0,
           location.country === 'United States of America' ? -74.006 : 0,
           location.name,
@@ -166,7 +166,7 @@ export const useWeatherStore = create<WeatherState>((set, get) => ({
           location.admin1,
           units
         );
-        set({ weatherData: response.data, isLoading: false });
+        set({ weatherData, isLoading: false });
       } catch {
         set({ error: translations[get().language].error, isLoading: false });
       }
@@ -183,13 +183,8 @@ export const useWeatherStore = create<WeatherState>((set, get) => ({
     
     try {
       set({ isSearching: true, error: null });
-      const res = await fetch(`/api/geocoding/search?q=${encodeURIComponent(query)}`);
-      if (!res.ok) {
-        set({ searchResults: [], isSearching: false });
-        return;
-      }
-      const data = await res.json();
-      set({ searchResults: data.results || data || [], isSearching: false });
+      const results = await geocodingApi.search(query);
+      set({ searchResults: results, isSearching: false });
     } catch {
       set({ searchResults: [], isSearching: false });
     }
@@ -199,7 +194,7 @@ export const useWeatherStore = create<WeatherState>((set, get) => ({
     try {
       set({ isLoading: true, error: null, searchResults: [] });
       const { unitSystem } = get();
-      const response = await weatherApi.getWeather(
+      const weatherData = await weatherApi.getWeather(
         location.latitude,
         location.longitude,
         location.name,
@@ -207,7 +202,7 @@ export const useWeatherStore = create<WeatherState>((set, get) => ({
         location.admin1,
         unitSystem
       );
-      set({ weatherData: response.data, isLoading: false, selectedDayIndex: 0 });
+      set({ weatherData, isLoading: false, selectedDayIndex: 0 });
     } catch {
       set({ error: translations[get().language].error, isLoading: false });
     }
