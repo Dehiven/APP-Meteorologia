@@ -12,6 +12,15 @@ import {
 } from 'react-icons/wi';
 import { useWeatherStore } from '../store/weatherStore';
 
+const getTemperatureGradient = (temp: number): string => {
+  if (temp < 0) return 'from-indigo-900 via-purple-900 to-black';
+  if (temp < 10) return 'from-blue-800 via-blue-900 to-slate-900';
+  if (temp < 18) return 'from-teal-600 via-cyan-700 to-blue-800';
+  if (temp < 25) return 'from-yellow-500 via-orange-500 to-amber-600';
+  if (temp < 32) return 'from-orange-600 via-red-500 to-pink-600';
+  return 'from-red-700 via-red-600 to-rose-800';
+};
+
 const getWeatherIconComponent = (code: number) => {
   if (code === 0) return WiDaySunny;
   if (code === 1) return WiDaySunny;
@@ -49,13 +58,15 @@ export function CurrentWeather() {
   }
 
   const { current, location } = weatherData;
+  const currentTemp = current.temperature;
+  const gradientClass = getTemperatureGradient(currentTemp);
   const uvIndex = Math.floor(Math.random() * 3) + 1;
   const uvLevel = uvIndex === 1 ? t.low : uvIndex === 2 ? t.moderate : t.high;
   const weatherDesc = t.weatherDescriptions[current.weatherCode] || 'Unknown';
 
   return (
     <div className={`transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-      <div className="bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl p-4 sm:p-6 text-white overflow-hidden relative">
+      <div className={`bg-gradient-to-br ${gradientClass} rounded-2xl p-4 sm:p-6 text-white overflow-hidden relative`}>
         <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
         
         {/* Location */}
