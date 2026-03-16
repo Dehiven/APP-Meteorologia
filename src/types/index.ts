@@ -37,6 +37,8 @@ export interface DailyWeather {
   temperatureMax: number[];
   temperatureMin: number[];
   weatherCode: number[];
+  sunrise?: string[];
+  sunset?: string[];
 }
 
 export interface LocationInfo {

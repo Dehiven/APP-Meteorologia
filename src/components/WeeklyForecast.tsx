@@ -6,7 +6,9 @@ import {
   WiSnow, 
   WiThunderstorm,
   WiFog,
-  WiDayCloudy
+  WiDayCloudy,
+  WiDirectionUp,
+  WiDirectionDown
 } from 'react-icons/wi';
 import { useWeatherStore } from '../store/weatherStore';
 
@@ -66,9 +68,9 @@ export function WeeklyForecast() {
   const { daily } = weatherData;
 
   return (
-    <div className={`bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-      <h3 className="text-base font-semibold text-white mb-3 flex items-center gap-2">
-        <span className="w-1 h-5 bg-amber-500 rounded-full"></span>
+    <div className={`bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-3xl p-4 sm:p-6 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+      <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+        <span className="w-1 h-6 bg-gradient-to-b from-amber-400 to-orange-500 rounded-full"></span>
         {t.weeklyForecast}
       </h3>
       
@@ -77,22 +79,30 @@ export function WeeklyForecast() {
           <button
             key={index}
             onClick={() => setSelectedDayIndex(index)}
-            className={`flex-shrink-0 flex flex-col items-center gap-1.5 p-3 rounded-xl transition-all min-w-[65px] ${
+            className={`flex-shrink-0 flex flex-col items-center gap-2 p-4 rounded-2xl transition-all min-w-[80px] ${
               selectedDayIndex === index
-                ? 'bg-white text-blue-900'
-                : 'bg-white/5 text-white hover:bg-white/10'
+                ? 'bg-gradient-to-br from-white to-white/90 text-slate-900 shadow-lg shadow-white/20'
+                : 'bg-white/5 text-white hover:bg-white/10 border border-white/5'
             }`}
           >
-            <span className={`text-xs font-medium ${selectedDayIndex === index ? 'text-blue-600' : 'text-white/60'}`}>
+            <span className={`text-sm font-semibold ${selectedDayIndex === index ? 'text-slate-600' : 'text-white/70'}`}>
               {getDayName(daily.time[index], t)}
             </span>
             <WeatherIcon 
               code={daily.weatherCode[index]} 
-              className={`text-2xl ${selectedDayIndex === index ? 'text-blue-600' : 'text-white'}`} 
+              className={`text-3xl ${selectedDayIndex === index ? 'text-amber-500' : 'text-white/90'}`} 
             />
-            <div className="text-sm font-bold">{Math.round(daily.temperatureMax[index])}°</div>
-            <div className={`text-xs ${selectedDayIndex === index ? 'text-blue-400' : 'text-white/40'}`}>
-              {Math.round(daily.temperatureMin[index])}°
+            <div className="flex items-center gap-1 mt-1">
+              <WiDirectionUp className={`text-xs ${selectedDayIndex === index ? 'text-red-500' : 'text-red-400'}`} />
+              <span className={`text-base font-bold ${selectedDayIndex === index ? 'text-slate-800' : 'text-white'}`}>
+                {Math.round(daily.temperatureMax[index])}°
+              </span>
+            </div>
+            <div className="flex items-center gap-1">
+              <WiDirectionDown className={`text-xs ${selectedDayIndex === index ? 'text-blue-500' : 'text-blue-400'}`} />
+              <span className={`text-sm ${selectedDayIndex === index ? 'text-slate-500' : 'text-white/40'}`}>
+                {Math.round(daily.temperatureMin[index])}°
+              </span>
             </div>
           </button>
         ))}

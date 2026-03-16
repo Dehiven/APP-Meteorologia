@@ -6,7 +6,8 @@ import {
   WiSnow, 
   WiThunderstorm,
   WiFog,
-  WiDayCloudy
+  WiDayCloudy,
+  WiRaindrop
 } from 'react-icons/wi';
 import { useWeatherStore } from '../store/weatherStore';
 import { formatHour } from '../utils/weatherUtils';
@@ -83,29 +84,36 @@ export function HourlyForecast() {
   }
 
   return (
-    <div className={`bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-      <div className="flex items-center gap-2 mb-3">
-        <span className="w-1 h-5 bg-amber-400 rounded-full"></span>
-        <h3 className="text-base font-semibold text-white">
+    <div className={`bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-3xl p-4 sm:p-6 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+      <div className="flex items-center gap-2 mb-4">
+        <span className="w-1 h-6 bg-gradient-to-b from-amber-400 to-orange-500 rounded-full"></span>
+        <h3 className="text-lg font-semibold text-white">
           {t.hourlyForecast}
         </h3>
       </div>
       
-      <div className="flex gap-1.5 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
+      <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
         {hourlyData.map((hour, index) => (
           <div
             key={index}
-            className="flex-shrink-0 flex flex-col items-center gap-1 p-2.5 rounded-xl bg-white/5 min-w-[55px]"
+            className="flex-shrink-0 flex flex-col items-center gap-1 p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors min-w-[65px] group"
           >
-            <span className="text-xs text-white/50">
+            <span className="text-xs text-white/50 font-medium">
               {formatHour(hour.time).substring(0, 5)}
             </span>
-            <WeatherIcon code={hour.code} className="text-lg text-white" />
-            <span className="text-sm font-bold text-white">
+            <div className="relative">
+              <WeatherIcon code={hour.code} className="text-2xl text-white/90 group-hover:text-white transition-colors" />
+              {hour.precip > 0 && (
+                <div className="absolute -top-1 -right-1 bg-cyan-500 rounded-full p-0.5">
+                  <WiRaindrop className="text-white text-[10px]" />
+                </div>
+              )}
+            </div>
+            <span className="text-base font-bold text-white">
               {Math.round(hour.temp)}°
             </span>
             {hour.precip > 0 && (
-              <span className="text-xs text-blue-300">💧{hour.precip.toFixed(1)}</span>
+              <span className="text-xs text-cyan-400 font-medium">{hour.precip.toFixed(1)}mm</span>
             )}
           </div>
         ))}

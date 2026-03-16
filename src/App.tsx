@@ -8,21 +8,27 @@ import {
   CurrentWeather, 
   WeeklyForecast, 
   HourlyForecast, 
+  SavedLocations,
   LoadingSpinner, 
   ErrorMessage,
   WelcomeMessage 
 } from './components';
 import { useWeatherStore } from './store/weatherStore';
+import type { GeocodingResult } from './types';
 
 function App() {
-  const { weatherData, isLoading, t } = useWeatherStore();
+  const { weatherData, isLoading, t, fetchWeather } = useWeatherStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const handleSelectLocation = (location: GeocodingResult) => {
+    fetchWeather(location);
+  };
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Header */}
       <header className="sticky top-0 z-50">
-        <div className="absolute inset-0 bg-slate-900/95 backdrop-blur-xl border-b border-white/10"></div>
+        <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl border-b border-white/5"></div>
         
         <div className="relative px-4 py-3">
           {/* Main Header Row */}
@@ -75,6 +81,8 @@ function App() {
       {/* Main Content */}
       <main className="flex-1 px-4 py-4 md:px-6 md:py-6 max-w-6xl mx-auto w-full">
         <ErrorMessage />
+        
+        <SavedLocations onSelectLocation={handleSelectLocation} />
         
         {isLoading ? (
           <LoadingSpinner />

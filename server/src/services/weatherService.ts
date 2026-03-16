@@ -35,6 +35,8 @@ export class WeatherService {
       'temperature_2m_max',
       'temperature_2m_min',
       'weather_code',
+      'sunrise',
+      'sunset',
     ].join(',');
 
     const response = await axios.get(`${config.openMeteoBaseUrl}/forecast`, {
@@ -83,6 +85,8 @@ export class WeatherService {
       temperatureMax: response.data.daily.temperature_2m_max,
       temperatureMin: response.data.daily.temperature_2m_min,
       weatherCode: response.data.daily.weather_code,
+      sunrise: response.data.daily.sunrise,
+      sunset: response.data.daily.sunset,
     };
 
     return { current, hourly, daily, location };
