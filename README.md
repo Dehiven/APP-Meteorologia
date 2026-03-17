@@ -2,7 +2,7 @@
 
 A modern, responsive weather application built with React, TypeScript, and TailwindCSS. Get real-time weather data and 7-day forecasts for any city worldwide.
 
-![Weather App Preview](https://dehiven.github.io/APP-Meteorologia/)
+https://dehiven.github.io/APP-Meteorologia/
 
 ## ✨ Features
 
