@@ -94,8 +94,8 @@ export function CurrentWeather() {
   const { current, location, daily } = weatherData;
   const currentTemp = current.temperature;
   const gradientClass = getTemperatureGradient(currentTemp);
-  const uvIndex = Math.floor(Math.random() * 3) + 1;
-  const uvLevel = uvIndex === 1 ? t.low : uvIndex === 2 ? t.moderate : t.high;
+  const uvIndex = daily?.uvIndexMax?.[0] || 0;
+  const uvLevel = uvIndex <= 2 ? t.low : uvIndex <= 5 ? t.moderate : t.high;
   const weatherDesc = t.weatherDescriptions[current.weatherCode] || 'Unknown';
 
   const sunrise = daily?.sunrise?.[0] ? new Date(daily.sunrise[0]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '--:--';
@@ -113,8 +113,8 @@ export function CurrentWeather() {
       addSavedLocation({
         id: Date.now(),
         name: location.name,
-        latitude: 0,
-        longitude: 0,
+        latitude: location.latitude || 0,
+        longitude: location.longitude || 0,
         country: location.country,
         admin1: location.admin1,
       });
@@ -158,11 +158,11 @@ export function CurrentWeather() {
           </div>
 
           <div className="flex items-center justify-center gap-4 sm:gap-6 mb-8">
-            <WeatherIcon code={current.weatherCode} className="text-7xl sm:text-9xl drop-shadow-lg" />
+            <WeatherIcon code={current.weatherCode} className="text-7xl sm:text-9xl text-white drop-shadow-lg" />
             <div className="text-center">
               <div className="text-6xl sm:text-8xl font-bold text-white leading-none">{Math.round(current.temperature)}°</div>
               <div className="text-white/60 text-sm mt-2 flex items-center justify-center gap-1">
-                <WiThermometer />
+                <WiThermometer className="text-white" />
                 <span>{t.feelsLike} {Math.round(current.apparentTemperature)}°</span>
               </div>
             </div>

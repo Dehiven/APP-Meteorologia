@@ -50,6 +50,9 @@ export const weatherApi = {
       'temperature_2m_max',
       'temperature_2m_min',
       'weather_code',
+      'sunrise',
+      'sunset',
+      'uv_index_max',
     ].join(',');
 
     const response = await axios.get(`${WEATHER_URL}/forecast`, {
@@ -91,11 +94,16 @@ export const weatherApi = {
         temperatureMax: response.data.daily.temperature_2m_max,
         temperatureMin: response.data.daily.temperature_2m_min,
         weatherCode: response.data.daily.weather_code,
+        sunrise: response.data.daily.sunrise,
+        sunset: response.data.daily.sunset,
+        uvIndexMax: response.data.daily.uv_index_max,
       },
       location: {
         name,
         country,
         admin1,
+        latitude: lat,
+        longitude: lon,
       },
     };
   },

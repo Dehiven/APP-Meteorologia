@@ -39,12 +39,15 @@ export interface DailyWeather {
   weatherCode: number[];
   sunrise?: string[];
   sunset?: string[];
+  uvIndexMax?: number[];
 }
 
 export interface LocationInfo {
   name: string;
   country: string;
   admin1?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export type UnitSystem = 'metric' | 'imperial';

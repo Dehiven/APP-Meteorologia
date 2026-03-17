@@ -102,7 +102,7 @@ export function HourlyForecast() {
               {formatHour(hour.time).substring(0, 5)}
             </span>
             <div className="relative">
-              <WeatherIcon code={hour.code} className="text-2xl text-white/90 group-hover:text-white transition-colors" />
+              <WeatherIcon code={hour.code} className="text-2xl text-white group-hover:text-white transition-colors" />
               {hour.precip > 0 && (
                 <div className="absolute -top-1 -right-1 bg-cyan-500 rounded-full p-0.5">
                   <WiRaindrop className="text-white text-[10px]" />

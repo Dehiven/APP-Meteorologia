@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { WiDaySunny } from 'react-icons/wi';
-import { FiX, FiMenu } from 'react-icons/fi';
+import { FiX, FiMenu, FiStar, FiChevronDown } from 'react-icons/fi';
 import { 
   SearchBar, 
   UnitSelector, 
@@ -17,11 +17,24 @@ import { useWeatherStore } from './store/weatherStore';
 import type { GeocodingResult } from './types';
 
 function App() {
-  const { weatherData, isLoading, t, fetchWeather } = useWeatherStore();
+  const { weatherData, isLoading, t, fetchWeather, savedLocations } = useWeatherStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [favoritesOpen, setFavoritesOpen] = useState(false);
+  const favoritesRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (favoritesRef.current && !favoritesRef.current.contains(event.target as Node)) {
+        setFavoritesOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleSelectLocation = (location: GeocodingResult) => {
     fetchWeather(location);
+    setFavoritesOpen(false);
   };
 
   return (
@@ -35,10 +48,10 @@ function App() {
           <div className="flex items-center justify-between gap-3">
             {/* Logo */}
             <div className="flex items-center gap-2">
-              <div className="w-9 h-9 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center">
-                <WiDaySunny className="text-white text-lg" />
+              <div className="w-9 h-9 bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                <WiDaySunny className="text-white text-xl" />
               </div>
-              <h1 className="text-lg font-bold text-white">Weather</h1>
+              <h1 className="text-lg font-bold text-white">ClimaLive</h1>
             </div>
 
             {/* Desktop Search */}
@@ -48,6 +61,45 @@ function App() {
 
             {/* Desktop Controls */}
             <div className="hidden md:flex items-center gap-2">
+              {/* Favorites Dropdown */}
+              <div className="relative" ref={favoritesRef}>
+                <button
+                  onClick={() => setFavoritesOpen(!favoritesOpen)}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg transition-all ${
+                    savedLocations.length > 0 
+                      ? 'bg-amber-500/20 text-amber-400 hover:bg-amber-500/30' 
+                      : 'bg-white/10 text-white/60 hover:bg-white/20'
+                  }`}
+                >
+                  <FiStar fill={savedLocations.length > 0 ? 'currentColor' : 'none'} size={18} />
+                  <span className="text-sm font-medium">{t.savedLocations}</span>
+                  <FiChevronDown className={`transition-transform ${favoritesOpen ? 'rotate-180' : ''}`} size={14} />
+                </button>
+                
+                {favoritesOpen && savedLocations.length > 0 && (
+                  <div className="absolute top-full right-0 mt-2 w-72 bg-slate-800/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl overflow-hidden z-50">
+                    <div className="p-2 max-h-80 overflow-y-auto">
+                      {savedLocations.map((location) => (
+                        <button
+                          key={location.id}
+                          onClick={() => handleSelectLocation(location)}
+                          className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all text-left ${
+                            weatherData?.location.name === location.name
+                              ? 'bg-cyan-500/20 border border-cyan-500/30'
+                              : 'hover:bg-white/10 border border-transparent'
+                          }`}
+                        >
+                          <div className="text-white font-semibold truncate">{location.name}</div>
+                          <div className="text-white/50 text-xs truncate">
+                            {location.admin1 && `${location.admin1}, `}{location.country}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+              
               <UnitSelector />
               <LanguageSelector />
             </div>

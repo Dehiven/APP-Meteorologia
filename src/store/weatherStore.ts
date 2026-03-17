@@ -300,8 +300,8 @@ export const useWeatherStore = create<WeatherState>((set, get) => ({
       try {
         set({ isLoading: true, error: null });
         const weatherData = await weatherApi.getWeather(
-          location.name === 'New York' ? 40.7128 : parseFloat(String(location.admin1)) || 0,
-          location.country === 'United States of America' ? -74.006 : 0,
+          location.latitude || 0,
+          location.longitude || 0,
           location.name,
           location.country,
           location.admin1,
@@ -335,9 +335,28 @@ export const useWeatherStore = create<WeatherState>((set, get) => ({
     try {
       set({ isLoading: true, error: null, searchResults: [] });
       const { unitSystem } = get();
+      
+      let lat = location.latitude;
+      let lon = location.longitude;
+      
+      if (!lat || !lon || lat === 0 || lon === 0) {
+        const results = await geocodingApi.search(location.name);
+        const exactMatch = results.find(
+          r => r.name.toLowerCase() === location.name.toLowerCase() && 
+               r.country === location.country
+        );
+        if (exactMatch) {
+          lat = exactMatch.latitude;
+          lon = exactMatch.longitude;
+        } else if (results.length > 0) {
+          lat = results[0].latitude;
+          lon = results[0].longitude;
+        }
+      }
+      
       const weatherData = await weatherApi.getWeather(
-        location.latitude,
-        location.longitude,
+        lat,
+        lon,
         location.name,
         location.country,
         location.admin1,

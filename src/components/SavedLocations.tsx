@@ -23,9 +23,10 @@ interface SavedLocationCardProps {
   location: GeocodingResult;
   onSelect: (location: GeocodingResult) => void;
   onRemove: (locationId: number) => void;
+  isActive: boolean;
 }
 
-const SavedLocationCard = ({ location, onSelect, onRemove }: SavedLocationCardProps) => {
+const SavedLocationCard = ({ location, onSelect, onRemove, isActive }: SavedLocationCardProps) => {
   const [temp, setTemp] = useState<number | null>(null);
   const [weatherCode, setWeatherCode] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -53,13 +54,17 @@ const SavedLocationCard = ({ location, onSelect, onRemove }: SavedLocationCardPr
   return (
     <button
       onClick={() => onSelect(location)}
-      className="group relative flex items-center gap-3 p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 transition-all w-full text-left"
+      className={`group relative flex items-center gap-3 p-3 rounded-2xl border transition-all w-full text-left ${
+        isActive 
+          ? 'bg-cyan-500/20 border-cyan-500/30' 
+          : 'bg-white/5 hover:bg-white/10 border-white/5 hover:border-white/20'
+      }`}
     >
-      <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isActive ? 'bg-cyan-500/30' : 'bg-white/10'}`}>
         {isLoading ? (
           <div className="w-5 h-5 border-2 border-white/30 border-t-white/60 rounded-full animate-spin" />
         ) : (
-          <Icon className="text-xl text-white/80" />
+          <Icon className="text-xl text-white" />
         )}
       </div>
       <div className="flex-1 min-w-0">
@@ -89,8 +94,10 @@ interface SavedLocationsProps {
 }
 
 export function SavedLocations({ onSelectLocation }: SavedLocationsProps) {
-  const { savedLocations, removeSavedLocation, t } = useWeatherStore();
+  const { savedLocations, removeSavedLocation, t, weatherData } = useWeatherStore();
   const [isExpanded, setIsExpanded] = useState(true);
+
+  const currentLocationName = weatherData?.location.name;
 
   if (savedLocations.length === 0) {
     return null;
@@ -120,6 +127,7 @@ export function SavedLocations({ onSelectLocation }: SavedLocationsProps) {
               location={location}
               onSelect={onSelectLocation}
               onRemove={removeSavedLocation}
+              isActive={location.name === currentLocationName}
             />
           ))}
         </div>

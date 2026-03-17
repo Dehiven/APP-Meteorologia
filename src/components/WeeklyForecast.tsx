@@ -90,7 +90,7 @@ export function WeeklyForecast() {
             </span>
             <WeatherIcon 
               code={daily.weatherCode[index]} 
-              className={`text-3xl ${selectedDayIndex === index ? 'text-amber-500' : 'text-white/90'}`} 
+              className={`text-3xl ${selectedDayIndex === index ? 'text-amber-500' : 'text-white'}`} 
             />
             <div className="flex items-center gap-1 mt-1">
               <WiDirectionUp className={`text-xs ${selectedDayIndex === index ? 'text-red-500' : 'text-red-400'}`} />
