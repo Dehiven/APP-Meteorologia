@@ -34,10 +34,24 @@ const SavedLocationCard = ({ location, onSelect, onRemove, isActive }: SavedLoca
   useEffect(() => {
     const fetchQuickWeather = async () => {
       try {
-        const res = await fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&current=temperature_2m,weather_code&timezone=auto`
+        let lat = location.latitude;
+        let lon = location.longitude;
+        
+        if (!lat || !lon || lat === 0 || lon === 0) {
+          const res = await fetch(
+            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(location.name)}&count=1&language=en&format=json`
+          );
+          const geoData = await res.json();
+          if (geoData.results && geoData.results.length > 0) {
+            lat = geoData.results[0].latitude;
+            lon = geoData.results[0].longitude;
+          }
+        }
+        
+        const weatherRes = await fetch(
+          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`
         );
-        const data = await res.json();
+        const data = await weatherRes.json();
         setTemp(data.current?.temperature_2m);
         setWeatherCode(data.current?.weather_code || 0);
       } catch {
@@ -47,7 +61,7 @@ const SavedLocationCard = ({ location, onSelect, onRemove, isActive }: SavedLoca
       }
     };
     fetchQuickWeather();
-  }, [location]);
+  }, [location.latitude, location.longitude, location.name]);
 
   const Icon = getWeatherIconComponent(weatherCode);
 
