@@ -4,7 +4,6 @@ export { LanguageSelector } from './LanguageSelector';
 export { CurrentWeather } from './CurrentWeather';
 export { WeeklyForecast } from './WeeklyForecast';
 export { HourlyForecast } from './HourlyForecast';
-export { SavedLocations } from './SavedLocations';
 export { LoadingSpinner } from './LoadingSpinner';
 export { ErrorMessage } from './ErrorMessage';
 export { WelcomeMessage } from './WelcomeMessage';

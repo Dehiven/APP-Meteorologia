@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { WiDaySunny } from 'react-icons/wi';
-import { FiX, FiMenu, FiStar, FiChevronDown } from 'react-icons/fi';
+import { FiX, FiMenu } from 'react-icons/fi';
 import { 
   SearchBar, 
   UnitSelector, 
@@ -8,34 +8,15 @@ import {
   CurrentWeather, 
   WeeklyForecast, 
   HourlyForecast, 
-  SavedLocations,
   LoadingSpinner, 
   ErrorMessage,
   WelcomeMessage 
 } from './components';
 import { useWeatherStore } from './store/weatherStore';
-import type { GeocodingResult } from './types';
 
 function App() {
-  const { weatherData, isLoading, t, fetchWeather, savedLocations } = useWeatherStore();
+  const { weatherData, isLoading, t } = useWeatherStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [favoritesOpen, setFavoritesOpen] = useState(false);
-  const favoritesRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (favoritesRef.current && !favoritesRef.current.contains(event.target as Node)) {
-        setFavoritesOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const handleSelectLocation = (location: GeocodingResult) => {
-    fetchWeather(location);
-    setFavoritesOpen(false);
-  };
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
@@ -61,45 +42,6 @@ function App() {
 
             {/* Desktop Controls */}
             <div className="hidden md:flex items-center gap-2">
-              {/* Favorites Dropdown */}
-              <div className="relative" ref={favoritesRef}>
-                <button
-                  onClick={() => setFavoritesOpen(!favoritesOpen)}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg transition-all ${
-                    savedLocations.length > 0 
-                      ? 'bg-amber-500/20 text-amber-400 hover:bg-amber-500/30' 
-                      : 'bg-white/10 text-white/60 hover:bg-white/20'
-                  }`}
-                >
-                  <FiStar fill={savedLocations.length > 0 ? 'currentColor' : 'none'} size={18} />
-                  <span className="text-sm font-medium">{t.savedLocations}</span>
-                  <FiChevronDown className={`transition-transform ${favoritesOpen ? 'rotate-180' : ''}`} size={14} />
-                </button>
-                
-                {favoritesOpen && savedLocations.length > 0 && (
-                  <div className="absolute top-full right-0 mt-2 w-72 bg-slate-800/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl overflow-hidden z-50">
-                    <div className="p-2 max-h-80 overflow-y-auto">
-                      {savedLocations.map((location) => (
-                        <button
-                          key={location.id}
-                          onClick={() => handleSelectLocation(location)}
-                          className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all text-left ${
-                            weatherData?.location.name === location.name
-                              ? 'bg-cyan-500/20 border border-cyan-500/30'
-                              : 'hover:bg-white/10 border border-transparent'
-                          }`}
-                        >
-                          <div className="text-white font-semibold truncate">{location.name}</div>
-                          <div className="text-white/50 text-xs truncate">
-                            {location.admin1 && `${location.admin1}, `}{location.country}
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-              
               <UnitSelector />
               <LanguageSelector />
             </div>
@@ -133,8 +75,6 @@ function App() {
       {/* Main Content */}
       <main className="flex-1 px-4 py-4 md:px-6 md:py-6 max-w-6xl mx-auto w-full">
         <ErrorMessage />
-        
-        <SavedLocations onSelectLocation={handleSelectLocation} />
         
         {isLoading ? (
           <LoadingSpinner />

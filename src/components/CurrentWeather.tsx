@@ -15,7 +15,7 @@ import {
   WiBarometer,
   WiDirectionUp
 } from 'react-icons/wi';
-import { FiStar } from 'react-icons/fi';
+
 import { useWeatherStore } from '../store/weatherStore';
 
 const getTemperatureGradient = (temp: number): string => {
@@ -76,7 +76,7 @@ const MetricCard = ({ icon, label, value, subValue, progress, progressColor = 'b
 );
 
 export function CurrentWeather() {
-  const { weatherData, unitSystem, t, savedLocations, addSavedLocation, removeSavedLocation } = useWeatherStore();
+  const { weatherData, unitSystem, t } = useWeatherStore();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -103,24 +103,6 @@ export function CurrentWeather() {
   const maxTemp = daily?.temperatureMax?.[0];
   const minTemp = daily?.temperatureMin?.[0];
 
-  const isSaved = savedLocations.some(l => l.name === location.name && l.country === location.country);
-
-  const handleToggleSave = () => {
-    if (isSaved) {
-      const loc = savedLocations.find(l => l.name === location.name && l.country === location.country);
-      if (loc) removeSavedLocation(loc.id);
-    } else {
-      addSavedLocation({
-        id: Date.now(),
-        name: location.name,
-        latitude: location.latitude || 0,
-        longitude: location.longitude || 0,
-        country: location.country,
-        admin1: location.admin1,
-      });
-    }
-  };
-
   const getUvColor = () => {
     if (uvIndex <= 2) return 'bg-green-400';
     if (uvIndex <= 5) return 'bg-yellow-400';
@@ -142,17 +124,6 @@ export function CurrentWeather() {
             </div>
             <div className="flex items-center justify-center gap-3 mt-3">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">{location.name}</h2>
-              <button
-                onClick={handleToggleSave}
-                className={`p-2 rounded-xl transition-all ${
-                  isSaved 
-                    ? 'bg-amber-400 text-amber-900' 
-                    : 'bg-white/10 text-white/60 hover:bg-white/20'
-                }`}
-                title={isSaved ? t.removeFromFavorites : t.addToFavorites}
-              >
-                <FiStar fill={isSaved ? 'currentColor' : 'none'} size={20} />
-              </button>
             </div>
             <p className="text-white/70 text-base mt-1">{weatherDesc}</p>
           </div>

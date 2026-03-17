@@ -25,9 +25,7 @@ interface Translations {
   low: string;
   moderate: string;
   high: string;
-  savedLocations: string;
-  addToFavorites: string;
-  removeFromFavorites: string;
+
   weekdays: string[];
   weatherDescriptions: Record<number, string>;
 }
@@ -54,9 +52,7 @@ const translations: Record<Language, Translations> = {
     low: 'Low',
     moderate: 'Moderate',
     high: 'High',
-    savedLocations: 'Saved Locations',
-    addToFavorites: 'Add to favorites',
-    removeFromFavorites: 'Remove from favorites',
+
     weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     weatherDescriptions: {
       0: 'Clear sky',
@@ -106,9 +102,7 @@ const translations: Record<Language, Translations> = {
     low: 'Bajo',
     moderate: 'Moderado',
     high: 'Alto',
-    savedLocations: 'Ubicaciones guardadas',
-    addToFavorites: 'Agregar a favoritos',
-    removeFromFavorites: 'Eliminar de favoritos',
+
     weekdays: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
     weatherDescriptions: {
       0: 'Cielo despejado',
@@ -158,9 +152,7 @@ const translations: Record<Language, Translations> = {
     low: 'Faible',
     moderate: 'Modéré',
     high: 'Élevé',
-    savedLocations: 'Lieux enregistrés',
-    addToFavorites: 'Ajouter aux favoris',
-    removeFromFavorites: 'Retirer des favoris',
+
     weekdays: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
     weatherDescriptions: {
       0: 'Ciel dégagé',
@@ -210,9 +202,7 @@ const translations: Record<Language, Translations> = {
     low: 'Niedrig',
     moderate: 'Mittel',
     high: 'Hoch',
-    savedLocations: 'Gespeicherte Orte',
-    addToFavorites: 'Zu Favoriten hinzufügen',
-    removeFromFavorites: 'Aus Favoriten entfernen',
+
     weekdays: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
     weatherDescriptions: {
       0: 'Klarer Himmel',
@@ -253,7 +243,6 @@ interface WeatherState {
   isSearching: boolean;
   language: Language;
   t: Translations;
-  savedLocations: GeocodingResult[];
   
   setSelectedDayIndex: (index: number) => void;
   setUnitSystem: (units: UnitSystem) => void;
@@ -261,21 +250,7 @@ interface WeatherState {
   searchLocations: (query: string) => Promise<void>;
   fetchWeather: (location: GeocodingResult) => Promise<void>;
   clearError: () => void;
-  addSavedLocation: (location: GeocodingResult) => void;
-  removeSavedLocation: (locationId: number) => void;
-  isLocationSaved: (locationId: number) => boolean;
 }
-
-const loadSavedLocations = (): GeocodingResult[] => {
-  if (typeof window === 'undefined') return [];
-  const saved = localStorage.getItem('savedLocations');
-  return saved ? JSON.parse(saved) : [];
-};
-
-const saveSavedLocations = (locations: GeocodingResult[]) => {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem('savedLocations', JSON.stringify(locations));
-};
 
 export const useWeatherStore = create<WeatherState>((set, get) => ({
   weatherData: null,
@@ -287,7 +262,6 @@ export const useWeatherStore = create<WeatherState>((set, get) => ({
   isSearching: false,
   language: 'en',
   t: translations.en,
-  savedLocations: loadSavedLocations(),
 
   setSelectedDayIndex: (index) => set({ selectedDayIndex: index }),
   
@@ -369,25 +343,4 @@ export const useWeatherStore = create<WeatherState>((set, get) => ({
   },
 
   clearError: () => set({ error: null }),
-  
-  addSavedLocation: (location) => {
-    const { savedLocations } = get();
-    if (!savedLocations.find(l => l.id === location.id)) {
-      const newLocations = [...savedLocations, location];
-      saveSavedLocations(newLocations);
-      set({ savedLocations: newLocations });
-    }
-  },
-  
-  removeSavedLocation: (locationId) => {
-    const { savedLocations } = get();
-    const newLocations = savedLocations.filter(l => l.id !== locationId);
-    saveSavedLocations(newLocations);
-    set({ savedLocations: newLocations });
-  },
-  
-  isLocationSaved: (locationId) => {
-    const { savedLocations } = get();
-    return savedLocations.some(l => l.id === locationId);
-  },
 }));
